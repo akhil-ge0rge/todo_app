@@ -1,6 +1,7 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:todo_app/core/common/widgets/scircle_button.dart';
 import 'package:todo_app/core/common/widgets/scircle_widget.dart';
@@ -8,13 +9,17 @@ import 'package:todo_app/core/common/widgets/white_space.dart';
 import 'package:todo_app/core/res/colurs.dart';
 import 'package:todo_app/core/res/media_res.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:todo_app/core/utils/core_utils.dart';
 import 'package:todo_app/features/authentication/app/country_code_provider.dart';
 
-class SignInScreen extends ConsumerWidget {
+import '../controller/authentication_controller.dart';
+
+class SignInScreen extends HookConsumerWidget {
   const SignInScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final phoneController = useTextEditingController();
     final code = ref.watch(countryCodeProvider);
     return Scaffold(
       body: Center(
@@ -44,11 +49,13 @@ class SignInScreen extends ConsumerWidget {
               width: 200,
               color: AppColurs.light,
               wid: TextField(
+                controller: phoneController,
                 keyboardType: const TextInputType.numberWithOptions(
                     decimal: false, signed: false),
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly,
                 ],
+                readOnly: code == null ? true : false,
                 cursorColor: AppColurs.darkBackground,
                 decoration: InputDecoration(
                   border: InputBorder.none,
@@ -78,9 +85,20 @@ class SignInScreen extends ConsumerWidget {
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                             ),
+                            searchTextStyle: GoogleFonts.poppins(
+                              color: AppColurs.light,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
                             inputDecoration: InputDecoration(
                               border: OutlineInputBorder(),
                               label: Text("Search"),
+                              hintText: "Search",
+                              hintStyle: GoogleFonts.poppins(
+                                color: AppColurs.light,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
                               labelStyle: GoogleFonts.poppins(
                                 color: AppColurs.light,
                                 fontSize: 15,
@@ -91,8 +109,8 @@ class SignInScreen extends ConsumerWidget {
                     },
                     child: Text(
                       code == null
-                          ? "Pick a country"
-                          : "${code.flagEmoji}${code.countryCode}",
+                          ? "Pick country"
+                          : "${code.flagEmoji}  +${code.phoneCode} ",
                       style: GoogleFonts.poppins(
                         fontSize: code == null ? 13 : 18,
                         color: AppColurs.darkBackground,
@@ -112,8 +130,15 @@ class SignInScreen extends ConsumerWidget {
               height: 25,
             ),
             SCircleButton(
-              onPressed: () {
-                // AuthenticationController().sendOTP(context: context, phoneNumber: "phoneNumber");
+              onPressed: () async {
+                if (code == null) return;
+                debugPrint("+${code.phoneCode}${phoneController.text}");
+                final navigatorContext = Navigator.of(context);
+                CoreUtils.showLoader(context);
+                await ref.read(authControllerProvider).sendOTP(
+                    context: context,
+                    phoneNumber: "+${code.countryCode}${phoneController.text}");
+                navigatorContext.pop();
               },
               text: "Send Code",
               width: 10,
