@@ -9,7 +9,7 @@ class SCircleButton extends StatelessWidget {
     super.key,
     required this.text,
     this.onPressed,
-    required this.widht,
+    required this.width,
     required this.height,
     required this.textColor,
     required this.fontSize,
@@ -18,7 +18,7 @@ class SCircleButton extends StatelessWidget {
   });
   final VoidCallback? onPressed;
   final String text;
-  final double widht;
+  final double width;
   final double height;
   final double fontSize;
   final Color textColor;
@@ -40,7 +40,7 @@ class SCircleButton extends StatelessWidget {
         onTap: onPressed,
         child: Container(
           height: height.h,
-          width: widht.w,
+          width: width.w,
           color: bgColor,
           child: Center(
             child: Text(
