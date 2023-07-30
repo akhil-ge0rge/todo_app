@@ -6,7 +6,7 @@ part of 'task_date_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$taskDateHash() => r'af05f87058c7e08303122f7e075f8092366e60d1';
+String _$taskDateHash() => r'68ee2742b167234584341c596d8a7622ea4e5273';
 
 /// See also [TaskDate].
 @ProviderFor(TaskDate)
@@ -21,7 +21,7 @@ final taskDateProvider =
 );
 
 typedef _$TaskDate = AutoDisposeNotifier<DateTime?>;
-String _$taskStartTimeHash() => r'd738cbac78cd52dd53da450e6aa7962786e0bdcc';
+String _$taskStartTimeHash() => r'86a23a785add8370046574d3fd9a874be9356708';
 
 /// See also [TaskStartTime].
 @ProviderFor(TaskStartTime)
@@ -37,7 +37,7 @@ final taskStartTimeProvider =
 );
 
 typedef _$TaskStartTime = AutoDisposeNotifier<DateTime?>;
-String _$taskEndTimeHash() => r'ef396453ef098b96fee9644ef9d99122e1c233c8';
+String _$taskEndTimeHash() => r'ea24e1b2ea17c3ea782173a4b107b5b5e0c07c05';
 
 /// See also [TaskEndTime].
 @ProviderFor(TaskEndTime)
