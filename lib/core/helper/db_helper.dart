@@ -37,4 +37,9 @@ class DBHelper {
     final userData = await localDB.query('users');
     return userData.isNotEmpty;
   }
+
+  static Future<void> deleteUser() async {
+    final localDB = await db();
+    localDB.delete('users');
+  }
 }

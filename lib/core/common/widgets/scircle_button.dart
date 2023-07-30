@@ -15,6 +15,7 @@ class SCircleButton extends StatelessWidget {
     required this.fontSize,
     required this.bgColor,
     this.fontWeight,
+    this.borderColor,
   });
   final VoidCallback? onPressed;
   final String text;
@@ -24,6 +25,7 @@ class SCircleButton extends StatelessWidget {
   final Color textColor;
   final Color bgColor;
   final FontWeight? fontWeight;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
