@@ -137,7 +137,7 @@ class SignInScreen extends HookConsumerWidget {
                 CoreUtils.showLoader(context);
                 await ref.read(authControllerProvider).sendOTP(
                     context: context,
-                    phoneNumber: "+${code.countryCode}${phoneController.text}");
+                    phoneNumber: "+${code.phoneCode}${phoneController.text}");
                 navigatorContext.pop();
               },
               text: "Send Code",

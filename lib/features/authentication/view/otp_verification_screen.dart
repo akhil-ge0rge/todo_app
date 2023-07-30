@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pinput/pinput.dart';
-import 'package:todo_app/core/common/widgets/scircle_widget.dart';
 import 'package:todo_app/core/common/widgets/white_space.dart';
 import 'package:todo_app/core/res/colurs.dart';
 import 'package:todo_app/core/res/media_res.dart';
+import 'package:todo_app/core/utils/core_utils.dart';
+import 'package:todo_app/features/authentication/controller/authentication_controller.dart';
 
-class OTPVerificationScreen extends StatelessWidget {
-  const OTPVerificationScreen({super.key});
+class OTPVerificationScreen extends ConsumerWidget {
+  final String verificationId;
+  const OTPVerificationScreen({super.key, required this.verificationId});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(),
+      // appBar: AppBar(),
       body: SafeArea(
           child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -28,7 +30,11 @@ class OTPVerificationScreen extends StatelessWidget {
             ),
             Pinput(
               length: 6,
-              onCompleted: (value) {},
+              onCompleted: (otp) async {
+                CoreUtils.showLoader(context);
+                await ref.read(authControllerProvider).verifyOTP(
+                    context: context, otp: otp, verificationId: verificationId);
+              },
               defaultPinTheme: PinTheme(
                 textStyle: GoogleFonts.poppins(
                     fontWeight: FontWeight.w600, fontSize: 23),
