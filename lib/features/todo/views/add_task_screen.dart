@@ -8,6 +8,8 @@ import 'package:todo_app/core/common/widgets/white_space.dart';
 import 'package:todo_app/core/res/colurs.dart';
 import 'package:todo_app/core/utils/core_utils.dart';
 import 'package:todo_app/features/todo/apps/task_date_provider.dart';
+import 'package:todo_app/features/todo/apps/task_provider.dart';
+import 'package:todo_app/features/todo/model/task_model.dart';
 
 import '../../../core/common/widgets/filled_SField.dart';
 
@@ -152,7 +154,7 @@ class AddTaskScreen extends HookConsumerWidget {
               ),
               SCircleButton(
                 text: "Submit",
-                onPressed: () {
+                onPressed: () async {
                   if (titleController.text.trim().isNotEmpty &&
                       descriptionController.text.trim().isNotEmpty &&
                       dateProvider != null &&
@@ -169,6 +171,21 @@ class AddTaskScreen extends HookConsumerWidget {
                     debugPrint("date $date");
                     debugPrint("sTimer $sTimer");
                     debugPrint("eTimer $eTimer");
+                    final navigator = Navigator.of(context);
+                    await ref
+                        .read(taskProviderProvider.notifier)
+                        .addTask(TaskModel(
+                          title: title,
+                          description: desc,
+                          date: date,
+                          startTime: sTimer,
+                          endTime: eTimer,
+                          remind: false,
+                        ));
+                    navigator.pop();
+                  } else {
+                    CoreUtils.showSnackBar(
+                        context: context, message: "All Field Required");
                   }
                 },
                 width: double.infinity,

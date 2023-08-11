@@ -76,16 +76,27 @@ class TaskProvider extends _$TaskProvider {
     }).toList();
   }
 
+  Future<List<TaskModel>> getCompletedTasksForToday() async {
+    if (state.isEmpty) return state;
+    final taskForToday = await getTodaysTasks();
+    return taskForToday.where((task) {
+      return task.isCompleted;
+    }).toList();
+  }
+
+  Future<List<TaskModel>> getActiveTasksForToday() async {
+    if (state.isEmpty) return state;
+
+    final taskForToday = await getTodaysTasks();
+    return taskForToday.where((task) {
+      return !task.isCompleted;
+    }).toList();
+  }
+
   Future<List<TaskModel>> getInCompletedTasks() async {
     if (state.isEmpty) return state;
     return state.where((task) {
       return !task.isCompleted;
     }).toList();
-  }
-
-  Color randomColor() {
-    final random = Random();
-    int randomIndex = random.nextInt(AppColurs.colors.length);
-    return AppColurs.colors.elementAt(randomIndex);
   }
 }

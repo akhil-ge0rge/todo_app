@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 class AppColurs {
@@ -21,4 +22,10 @@ class AppColurs {
     Color(0xff0aa31e),
     Color(0xfff9f900),
   ];
+
+  static Color getRandomColor() {
+    final random = Random();
+    int randomIndex = random.nextInt(AppColurs.colors.length);
+    return AppColurs.colors.elementAt(randomIndex);
+  }
 }

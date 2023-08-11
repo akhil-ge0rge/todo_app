@@ -10,6 +10,7 @@ import 'package:todo_app/core/helper/db_helper.dart';
 import 'package:todo_app/core/res/colurs.dart';
 import 'package:todo_app/features/authentication/view/sign_in_screen.dart';
 import 'package:todo_app/features/todo/views/add_task_screen.dart';
+import 'package:todo_app/features/todo/widgets/active_task.dart';
 
 class HomeScreen extends HookConsumerWidget {
   const HomeScreen({super.key});
@@ -184,12 +185,15 @@ class HomeScreen extends HookConsumerWidget {
             ),
             SizedBox(
               height: screenHeight * 0.26,
-              child: TabBarView(
-                controller: tabController,
-                children: [
-                  Container(color: Colors.pink, child: Text("data")),
-                  Container(color: Colors.green, child: Text("data")),
-                ],
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: TabBarView(
+                  controller: tabController,
+                  children: [
+                    const ActiveTasks(),
+                    Container(color: Colors.green, child: Text("data")),
+                  ],
+                ),
               ),
             ),
           ],
