@@ -9,6 +9,7 @@ class FadingText extends StatelessWidget {
   final FontWeight? fontWeight;
   final Color? color;
   final TextAlign? textAlign;
+  final TextOverflow? overFlow;
 
   const FadingText({
     required this.text,
@@ -16,6 +17,7 @@ class FadingText extends StatelessWidget {
     this.fontSize,
     this.fontWeight,
     this.textAlign,
+    this.overFlow,
     super.key,
   });
 
@@ -25,7 +27,7 @@ class FadingText extends StatelessWidget {
       text,
       maxLines: 1,
       softWrap: true,
-      overflow: TextOverflow.fade,
+      overflow: overFlow ?? TextOverflow.fade,
       textAlign: textAlign ?? TextAlign.left,
       style: GoogleFonts.poppins(
         color: color ?? AppColurs.light,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:todo_app/core/common/widgets/white_space.dart';
 import 'package:todo_app/core/res/colurs.dart';
 import 'package:todo_app/features/todo/apps/task_provider.dart';
@@ -8,20 +9,20 @@ import 'package:todo_app/features/todo/widgets/todo_tile.dart';
 
 import '../utils/todo_utils.dart';
 
-class ActiveTasks extends ConsumerWidget {
-  const ActiveTasks({super.key});
+class CompletedTasks extends ConsumerWidget {
+  const CompletedTasks({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final task = ref.watch(taskProviderProvider);
     return FutureBuilder(
-      future: TodoUtils.getActiveTasksForToday(task),
+      future: TodoUtils.getCompletedTasksForToday(task),
       builder: (_, snapshot) {
         if (snapshot.hasData && snapshot.data != null) {
           if (snapshot.data!.isEmpty) {
             return Center(
               child: Text(
-                "No Pending Tasks",
+                "No Completed Tasks",
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -46,24 +47,10 @@ class ActiveTasks extends ConsumerWidget {
                         .read(taskProviderProvider.notifier)
                         .deleteTask(task.id!);
                   },
-                  onEdit: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddTaskScreen(
-                            task: task,
-                          ),
-                        ));
-                  },
                   bottomMargin: isLast ? null : 10,
-                  endIcon: Switch(
-                    value: task.isCompleted,
-                    onChanged: (_) {
-                      task.isCompleted = true;
-                      ref
-                          .watch(taskProviderProvider.notifier)
-                          .markAsCompleted(task);
-                    },
+                  endIcon: Icon(
+                    AntDesign.checkcircle,
+                    color: AppColurs.green,
                   ),
                 );
               },

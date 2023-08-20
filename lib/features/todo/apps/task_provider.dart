@@ -31,72 +31,13 @@ class TaskProvider extends _$TaskProvider {
     refresh();
   }
 
-  Future<List<TaskModel>> getTodaysTasks() async {
-    final today = DateTime.now();
-    if (state.isEmpty) return state;
-    return state.where((task) {
-      return DateUtils.isSameDay(task.date, today);
-    }).toList();
-  }
-
-  Future<List<TaskModel>> getTommorowsTasks() async {
-    final tommorrow = DateTime.now().add(const Duration(days: 1));
-    if (state.isEmpty) return state;
-    return state.where((task) {
-      return DateUtils.isSameDay(task.date, tommorrow);
-    }).toList();
-  }
-
-  Future<List<TaskModel>> getDayAfterTommorowsTasks() async {
-    final tommorrow = DateTime.now().add(const Duration(days: 2));
-    if (state.isEmpty) return state;
-    return state.where((task) {
-      return DateUtils.isSameDay(task.date, tommorrow);
-    }).toList();
-  }
-
-  Future<List<TaskModel>> getLast30daysTasks() async {
-    final last30Days = DateTime.now().subtract(const Duration(days: 30));
-    if (state.isEmpty) return state;
-    return state.where((task) {
-      return task.date!.isAfter(last30Days) &&
-          task.date!.isBefore(DateUtils.dateOnly(DateTime.now()));
-    }).toList();
+  Future<void> updateTask(TaskModel task) async {
+    await DBHelper.updateTask(task);
+    refresh();
   }
 
   Future<void> markAsCompleted(TaskModel task) async {
     await DBHelper.updateTask(task);
     refresh();
-  }
-
-  Future<List<TaskModel>> getCompletedTasks() async {
-    if (state.isEmpty) return state;
-    return state.where((task) {
-      return task.isCompleted;
-    }).toList();
-  }
-
-  Future<List<TaskModel>> getCompletedTasksForToday() async {
-    if (state.isEmpty) return state;
-    final taskForToday = await getTodaysTasks();
-    return taskForToday.where((task) {
-      return task.isCompleted;
-    }).toList();
-  }
-
-  Future<List<TaskModel>> getActiveTasksForToday() async {
-    if (state.isEmpty) return state;
-
-    final taskForToday = await getTodaysTasks();
-    return taskForToday.where((task) {
-      return !task.isCompleted;
-    }).toList();
-  }
-
-  Future<List<TaskModel>> getInCompletedTasks() async {
-    if (state.isEmpty) return state;
-    return state.where((task) {
-      return !task.isCompleted;
-    }).toList();
   }
 }

@@ -9,8 +9,13 @@ import 'package:todo_app/core/common/widgets/white_space.dart';
 import 'package:todo_app/core/helper/db_helper.dart';
 import 'package:todo_app/core/res/colurs.dart';
 import 'package:todo_app/features/authentication/view/sign_in_screen.dart';
+import 'package:todo_app/features/todo/apps/task_provider.dart';
 import 'package:todo_app/features/todo/views/add_task_screen.dart';
 import 'package:todo_app/features/todo/widgets/active_task.dart';
+
+import '../widgets/completed_task.dart';
+import '../widgets/task_for_tomorrow.dart';
+import '../widgets/tasks_for_day_after_tomorrow.dart';
 
 class HomeScreen extends HookConsumerWidget {
   const HomeScreen({super.key});
@@ -25,6 +30,7 @@ class HomeScreen extends HookConsumerWidget {
     final screenSize = MediaQuery.of(context).size;
     final screenWidth = screenSize.width;
     final screenHeight = screenSize.height;
+    ref.read(taskProviderProvider.notifier).refresh();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -191,11 +197,19 @@ class HomeScreen extends HookConsumerWidget {
                   controller: tabController,
                   children: [
                     const ActiveTasks(),
-                    Container(color: Colors.green, child: Text("data")),
+                    const CompletedTasks(),
                   ],
                 ),
               ),
             ),
+            WhiteSpace(
+              height: 20,
+            ),
+            const TaskForTommorrow(),
+            WhiteSpace(
+              height: 20,
+            ),
+            const TaskForDayAfterTomorrow(),
           ],
         ),
       ),

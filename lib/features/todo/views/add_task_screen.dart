@@ -13,13 +13,36 @@ import 'package:todo_app/features/todo/model/task_model.dart';
 
 import '../../../core/common/widgets/filled_SField.dart';
 
-class AddTaskScreen extends HookConsumerWidget {
-  const AddTaskScreen({super.key});
+class AddTaskScreen extends StatefulHookConsumerWidget {
+  const AddTaskScreen({super.key, this.task});
+  final TaskModel? task;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final titleController = useTextEditingController();
-    final descriptionController = useTextEditingController();
+  ConsumerState<AddTaskScreen> createState() => _AddTaskScreenState();
+}
+
+class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.task != null) {
+        ref.read(taskDateProvider.notifier).changeDate(widget.task!.date!);
+        ref
+            .read(taskStartTimeProvider.notifier)
+            .changeTime(widget.task!.startTime!);
+        ref
+            .read(taskEndTimeProvider.notifier)
+            .changeTime(widget.task!.endTime!);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final titleController = useTextEditingController(text: widget.task?.title);
+    final descriptionController =
+        useTextEditingController(text: widget.task?.description);
     final hintStyle = GoogleFonts.poppins(
         fontSize: 15, color: AppColurs.lightGrey, fontWeight: FontWeight.bold);
     final screenSize = MediaQuery.of(context).size;
@@ -172,17 +195,29 @@ class AddTaskScreen extends HookConsumerWidget {
                     debugPrint("sTimer $sTimer");
                     debugPrint("eTimer $eTimer");
                     final navigator = Navigator.of(context);
-                    await ref
-                        .read(taskProviderProvider.notifier)
-                        .addTask(TaskModel(
-                          title: title,
-                          description: desc,
-                          date: date,
-                          startTime: sTimer,
-                          endTime: eTimer,
-                          remind: false,
-                        ));
-                    navigator.pop();
+                    CoreUtils.showLoader(context);
+                    final task = TaskModel(
+                      id: widget.task?.id,
+                      repeat: widget.task == null ? true : widget.task!.repeat,
+                      title: title,
+                      description: desc,
+                      date: date,
+                      startTime: sTimer,
+                      endTime: eTimer,
+                      remind: widget.task == null ? true : widget.task!.remind,
+                    );
+                    if (widget.task != null) {
+                      await ref
+                          .read(taskProviderProvider.notifier)
+                          .updateTask(task);
+                    } else {
+                      await ref
+                          .read(taskProviderProvider.notifier)
+                          .addTask(task);
+                    }
+                    navigator
+                      ..pop()
+                      ..pop();
                   } else {
                     CoreUtils.showSnackBar(
                         context: context, message: "All Field Required");
